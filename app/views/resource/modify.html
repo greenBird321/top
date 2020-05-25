@@ -1,0 +1,110 @@
+<div class="app-content-body ">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3">Modifty Resource Info</h1>
+    </div>
+
+    <div class="wrapper-md">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <ul class="nav nav-pills pull-right">
+                            <li><a data-pjax href="/resource/index?id={{data['app']}}"><i class="fa fa-mail-reply-all"></i> 返回 </a></li>
+                        </ul>
+                        <i class="fa fa-cube"></i> 编辑资源详情
+                    </div>
+                    <div class="panel-body">
+                        <form data-pjax method="post" class="bs-example form-horizontal" action="/resource/modify">
+
+                            <input type="hidden" name="id" class="form-control" value="{{data['id']}}">
+
+                            <input type="hidden" name="app" class="form-control" value="{{data['app']}}" placeholder="">
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">名称</label>
+                                <div class="col-lg-8">
+                                    <input type="text" name="name" class="form-control" value="{{data['name']}}"
+                                           placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="data-post">
+                                <label class="col-lg-2 control-label">类型</label>
+                                <div class="col-lg-8">
+                                    <label class="checkbox-inline i-checks">
+                                        <input name="type" type="checkbox" value="menu" {%if data['type'] == 'menu' %}
+                                        checked {% endif %}><i></i> menu
+                                    </label>
+                                    <label class="checkbox-inline i-checks">
+                                        <input name="type" type="checkbox" value="node" {%if data['type'] == 'node' %}
+                                        checked {% endif %}><i></i> node
+                                    </label>
+                                    <label class="checkbox-inline i-checks">
+                                        <input name="type" type="checkbox" value="link" {%if data['type'] == 'link' %}
+                                        checked {% endif %}><i></i> link
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">资源节点</label>
+                                <div class="col-lg-8">
+                                    <input type="text" name="resource" class="form-control" value="{{data['resource']}}"
+                                           placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">icon设置</label>
+                                <div class="col-lg-8">
+                                    <input type="text" name="icon" class="form-control" value="{{data['icon']}}"
+                                           placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">是否启用</label>
+                                <div class="col-sm-8">
+                                    <label class="i-switch bg-info m-t-xs m-r">
+                                        <input type="checkbox" name="status" value="1" {%if data['status']==1%}checked{%endif%}>
+                                        <i></i>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">备注</label>
+                                <div class="col-lg-8">
+                                    <input type="text" name="remark" class="form-control" value="{{data['remark']}}"
+                                           placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <button type="submit" class="btn btn-info">确认修改</button>
+                                    <a class="btn btn-default" onclick="javascript:history.back(-1)">取消修改</a>
+                                    <a href="/resource/remove?id={{data['id']}}" class="btn btn-danger pull-right"
+                                       onclick="return confirm('确认删除?')">
+                                        <i class="fa fa-trash-o text"></i><span class="text">删除</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#data-post').find('input[type=checkbox]').bind('click', function () {
+            $('#data-post').find('input[type=checkbox]').not(this).attr("checked", false);
+        });
+    });
+</script>

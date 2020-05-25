@@ -1,0 +1,88 @@
+<div class="app-content-body ">
+
+
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3">Modify Role Info</h1>
+    </div>
+    <div class="wrapper-md">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <ul class="nav nav-pills pull-right">
+                            <li><a href="javascript:history.back(-1)"><i class="fa fa-mail-reply-all"></i> 返回 </a></li>
+                        </ul>
+                        <i class="fa fa-cube"></i> 修改角色信息
+                    </div>
+                    <div class="panel-body">
+                        <form data-pjax method="post" class="bs-example form-horizontal" action="/role/modify">
+                            <input type="hidden" name="id" value="{{role['id']}}">
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">形象</label>
+                                <div class="col-lg-8">
+                                    <img src="{{role['avatar']}}" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">角色名称</label>
+                                <div class="col-lg-8">
+                                    <input type="text" name="name" class="form-control" value="{{role['name']}}" placeholder="" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">备注信息</label>
+                                <div class="col-lg-8">
+                                    <input type="text" name="remark" class="form-control" value="{{role['remark']}}" placeholder="" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">是否启用</label>
+                                <div class="col-sm-8">
+                                    <label class="i-switch bg-info m-t-xs m-r">
+                                        <input type="checkbox" name="status" value="1" {%if role['status']==1%}checked{%endif%}>
+                                        <i></i>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">权限管理</label>
+                                <div class="col-sm-8 row-sm text-center">
+
+                                    {%if app_list is defined%}
+                                    {%for item in app_list%}
+                                    <div class="col-xs-4">
+                                        <a  data-pjax href="/role/resource?role={{role['name']}}&id={{item['app_id']}}&role_id={{role['id']}}" class="block panel padder-v bg-info item">
+                                            <span class="text-white font-thin h1 block">{{item['app_id']}}</span>
+                                            <span class="text-muted text-xs">{{item['name']}}</span>
+                                        </a>
+                                    </div>
+                                    {%endfor%}
+                                    {%endif%}
+
+                                </div>
+
+                            </div>
+
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <button type="submit" class="btn btn-info">确认修改</button>
+                                    <a class="btn btn-default" onclick="javascript:history.back(-1)">取消修改</a>
+                                    <a href="/role/remove?id={{role['id']}}" class="btn btn-danger pull-right" onclick="return confirm('确认删除?')">
+                                        <i class="fa fa-trash-o text"></i><span class="text">删除</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

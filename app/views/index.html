@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="utf-8" />
+    <title>管理中心 | MC</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link rel="stylesheet" href="/assets/libs/assets/animate.css/animate.css" type="text/css" />
+    <link rel="stylesheet" href="/assets/libs/assets/font-awesome/css/font-awesome.min.css" type="text/css" />
+    <link rel="stylesheet" href="/assets/libs/assets/simple-line-icons/css/simple-line-icons.css" type="text/css" />
+    <link rel="stylesheet" href="/assets/libs/jquery/bootstrap/dist/css/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="/assets/css/font.css" type="text/css" />
+    <link rel="stylesheet" href="/assets/css/app.css" type="text/css" />
+    <link rel="stylesheet" href ="/assets/libs/jquery/bootstrap-datepicker/bootstrap-datepicker.min.css" type="text/css"/>
+    <link rel="stylesheet" href ="/assets/libs/jquery/nestable/jquery.nestable.css" type="text/css"/>
+    <script src="/assets/libs/jquery/jquery/dist/jquery.js"></script>
+    <script src="/assets/libs/jquery/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/assets/libs/jquery/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+    <script src="/assets/libs/jquery/nestable/jquery.nestable.js"></script>
+</head>
+<body>
+<div class="app app-header-fixed app-aside-fixed">
+
+
+    <!-- header -->
+    {{ partial("dashboard/header", ['data': common]) }}
+    <!-- / header -->
+
+
+    <!-- aside -->
+    {{ partial("dashboard/sidebar", ['data': common]) }}
+    <!-- / aside -->
+
+
+    <!-- content -->
+    <div id="content" class="app-content" role="main">
+        {{content()}}
+    </div>
+    <!-- /content -->
+
+    <!-- footer -->
+    {{ partial("dashboard/footer", ['data': common]) }}
+    <!-- / footer -->
+
+
+
+</div>
+
+<script src="/assets/js/ui-load.js"></script>
+<script src="/assets/js/ui-jp.config.js"></script>
+<script src="/assets/js/ui-jp.js"></script>
+<script src="/assets/js/ui-nav.js"></script>
+<script src="/assets/js/ui-toggle.js"></script>
+<script src="/assets/js/ui-client.js"></script>
+
+<!-- PJAX 暂无法lazyload -->
+<script src="/assets/js/jquery.pjax.min.js"></script>
+<script src='/assets/libs/jquery/datatables/media/js/jquery.dataTables.min.js'></script>
+<script src="/assets/libs/jquery/plugins/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script type="text/javascript">
+    $(document).pjax('[data-pjax] a, a[data-pjax]', '#content', {
+        cache: false,
+        timeout: 5000
+    });
+    $(document).on('submit', 'form[data-pjax]', function (event) {
+        $.pjax.submit(event, '#content')
+    });
+
+    // 监听 pjax 导航切换事件
+    $( document ).on( 'click', 'a[data-pjax]', function( event )
+    {
+        var _content = $( '#content' );
+        var _refuse_type = _content.find( '#wrap_table' ).attr( 'ui-refuse'),
+            _defined = _content.find( '#wrap_table' ).attr( 'ui-defined' );       // 获取需要处理的配置
+
+        if( typeof _refuse_type != 'undefined' && typeof _defined != 'undefined' )
+        {
+            switch( _refuse_type )
+            {
+                case 'dataTables':
+                    var _self_oper = _defined.split( ',' ),
+                            _oper_len = _self_oper.length;
+
+                    var _timer = [],
+                            _count = [];
+
+                    // 处理 pjax 使用 datatables 可能残留样式的 bug
+                    for( var iCount = 0; iCount < _oper_len; iCount++ )
+                    {
+                        _count[iCount] = [];
+
+                        _timer[iCount] = setInterval( function()
+                        {
+                            if( _count == 10 )
+                            {
+                                clearInterval( _timer[iCount] );
+                            }
+                            else
+                            {
+                                var _found = $( '#content' ).find( '#table_list' ).length;
+
+                                if( _found > 0 )
+                                {
+                                    var _target = $( '#wrap_table'),
+                                            _table = _target.find( '#table_list' ).clone();
+
+                                    _target.empty();
+                                    _target.html( _table );
+
+                                    clearInterval( _timer[iCount] );
+                                }
+                            }
+
+                        }, 100);
+                    }
+                break;
+            }
+        }
+    } );
+</script>
+
+</body>
+</html>

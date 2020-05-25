@@ -1,0 +1,114 @@
+<div class="app-content-body ">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3">New Resource Info</h1>
+    </div>
+
+    <div class="wrapper-md">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <ul class="nav nav-pills pull-right">
+                            <li><a data-pjax="" href="/resource/index?id={{appName}}"><i class="fa fa-mail-reply-all"></i> 返回 </a></li>
+                        </ul>
+                        <i class="fa fa-cube"></i> 新建资源
+                    </div>
+                    <div class="panel-body">
+                        <form data-pjax method="post" class="bs-example form-horizontal" action="/resource/new">
+                            <input type="hidden" name="app" value="{{appName}}">
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">名称</label>
+                                <div class="col-lg-8">
+                                    <input type="text" name="name" class="form-control" value="" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="data-post">
+                                <label class="col-lg-2 control-label">类型</label>
+                                <div class="col-lg-8">
+                                    <label class="checkbox-inline i-checks">
+                                        <input name="type" type="checkbox" value="menu"><i></i> menu
+                                    </label>
+                                    <label class="checkbox-inline i-checks">
+                                        <input name="type" type="checkbox" value="node"><i></i> node
+                                    </label>
+                                    <label class="checkbox-inline i-checks">
+                                        <input name="type" type="checkbox" value="link"><i></i> link
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">分类</label>
+                                <!--<div class="col-lg-8">-->
+                                    <!--<input type="text" name="sort" class="form-control" value="" placeholder="">-->
+                                <!--</div>-->
+                                <div class="col-sm-4">
+                                    <select name="parent" class="form-control" required>
+                                        <option value="">请选择</option>
+                                        <option value="0">创建一个新的父类</option>
+                                        {% if parentInfo is defined %}
+                                            {%  for parent in parentInfo %}
+                                                <option value="{{parent['id']}}">{{parent['name']}}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">资源节点</label>
+                                <div class="col-lg-8">
+                                    <input type="text" name="resource" class="form-control" value=""
+                                           placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">icon设置</label>
+                                <div class="col-lg-8">
+                                    <input type="text" name="icon" class="form-control" value=""
+                                           placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">是否启用</label>
+                                <div class="col-sm-8">
+                                    <label class="i-switch bg-info m-t-xs m-r">
+                                        <input type="checkbox" name="status" value="1" checked>
+                                        <i></i>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">备注</label>
+                                <div class="col-lg-8">
+                                    <input type="text" name="remark" class="form-control" value="" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <button type="submit" class="btn btn-info">确认新建</button>
+                                    <a class="btn btn-default" onclick="javascript:history.back(-1)">取消新建</a>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#data-post').find('input[type=checkbox]').bind('click', function () {
+            $('#data-post').find('input[type=checkbox]').not(this).attr("checked", false);
+        });
+    });
+</script>

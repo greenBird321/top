@@ -1,0 +1,94 @@
+<div class="app-content-body ">
+
+
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3">Game Create</h1>
+    </div>
+    <div class="wrapper-md">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <ul class="nav nav-pills pull-right">
+                            <li><a href="javascript:history.back(-1)"><i class="fa fa-mail-reply-all"></i> 返回 </a></li>
+                        </ul>
+                        <i class="fa fa-cube"></i> 添加游戏
+                    </div>
+                    <div class="panel-body">
+                        <form method="post" data-pjax="" class="bs-example form-horizontal">
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">应用名称</label>
+                                <div class="col-lg-8">
+                                    <input type="text" name="name" class="form-control" placeholder="" required>
+                                    <!--<span class="help-block m-b-none"></span>-->
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">英文名称</label>
+                                <div class="col-lg-8">
+                                    <input type="text" name="en_name" class="form-control" placeholder="" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">游戏分类</label>
+                                <div class="col-sm-4">
+                                    <select name="class_id" class="form-control" required>
+                                        <option value="">请选择</option>
+                                        {% if gameclass is defined %}
+                                            {% for game in gameclass %}
+                                                <option value="{{game['id']}}">{{game['name']}}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">语言版本</label>
+                                <div class="col-sm-4">
+                                    <select name="version" class="form-control" required>
+                                        <option value="">请选择</option>
+                                        {% if gameverison is defined %}
+                                            {% for version in gameverison %}
+                                                <option value="{{version['lang']}}">{{version['lang']}}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">应用域名</label>
+                                <div class="col-lg-8">
+                                    <input type="text" name="domain" class="form-control" placeholder="" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">是否开启</label>
+                                <div class="col-sm-8">
+                                    <label class="i-switch bg-info m-t-xs m-r">
+                                        <input type="checkbox" name="status" value="1" checked>
+                                        <i></i>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <button type="submit" class="btn btn-info">确认添加</button>
+                                    <a type="submit" class="btn btn-default"
+                                       onclick="javascript:history.back(-1)">取消添加</a>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

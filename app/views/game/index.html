@@ -1,0 +1,66 @@
+<div class="app-content-body ">
+
+
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3">Game Manage</h1>
+    </div>
+    <div class="wrapper-md">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <ul class="nav nav-pills pull-right">
+                    <li><a data-pjax href="/game/new"><i class="fa fa-plus"></i> 添加游戏 </a></li>
+                </ul>
+                <i class="fa fa-cube"></i> 游戏管理
+            </div>
+            <div class="table-responsive">
+                <table ui-jq="dataTable" class="table table-striped b-t b-b">
+                    <thead>
+                    <tr>
+                        <th>GameID</th>
+                        <th>分类ID</th>
+                        <th>版本</th>
+                        <th>名称</th>
+                        <th>英文名称</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                        <th>管理</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% if games is defined %}
+                    {% for item in games %}
+                    <tr>
+                        <td>{{item['game_id']}}</td>
+                        <td>{{item['class_id']}}</td>
+                        <td>{{item['version']}}</td>
+                        <td><a href="{{item['domain']}}" target="_blank">{{item['name']}}</a></td>
+                        <td>{{item['en_name']}}</td>
+                        <td>
+                            {%if item['status'] == 1%}
+                            <i class="fa fa-check text-success"></i>
+                            {% else %}
+                            <i class="fa fa-times text-danger"></i>
+                            {% endif %}
+                        </td>
+                        <td>{{item['create_time']}}</td>
+                        <td><a data-pjax href="/game/modify?id={{item['id']}}">编辑</a></td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<link rel="stylesheet" href="/assets/libs/jquery/plugins/integration/bootstrap/3/dataTables.bootstrap.css" type="text/css"/>
+<script>
+    $(document).on('pjax:success', function () {
+        $(".table").dataTable();
+    });
+</script>

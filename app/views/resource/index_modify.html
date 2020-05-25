@@ -1,0 +1,108 @@
+<div class="app-content-body ">
+    <div class="bg-light lter b-b wrapper-md">
+        <div class="pull-right">
+            <a data-pjax href="/resource/new?app={{id}}" class="btn btn-info btn-addon "><i
+                    class="fa fa-plus"></i>创建资源</a>
+        </div>
+        <h1 class="m-n font-thin h3">Resources Manage</h1>
+    </div>
+
+    <div class="wrapper-md">
+        <div class="row">
+            <div class="col-lg-12">
+                <div ui-jq="nestable" id="nest_list" class="dd" style="max-width: 100%">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<textarea id="list_cache" style="display:none;"></textarea>
+<script>
+    jQuery(function($){
+        function initNestable(tree)
+        {
+            var l = $("<ol>").addClass("dd-list");
+            $.each(tree, function(i, v)
+            {
+                var c = $("<li>").addClass("dd-item items").attr({"data-id":v["id"]}),
+                        h = $("<div>").addClass("dd-handle dd3-handle").text('Drag');
+                var ct = '<div class="dd3-content" style="text-align: center">' +
+                        '<i class="'+v["icon"]+'"></i>' +
+                        '<span>&nbsp;&nbsp;&nbsp;</span>' +
+                        '<span>'+v["name"]+'</span>' +
+                        '<span class="pull-right">' +
+                        '<a data-pjax href="/resource/modify?id='+v["id"]+'"><i class="fa fa-pencil fa-fw m-r-xs"></i></a>' +
+                        '</span>' +
+                        '</div>';
+
+                c=c.append(h);
+                c=c.append(ct);
+                l.append(c);
+                if (!!v["children"])
+                    c.append(initNestable(v["children"]));
+            });
+            return l;
+        }
+
+        var data = JSON.parse( '{{tree}}' );
+        var list = initNestable(data);
+        var nest_list = $( '#nest_list' );
+
+        if( $('#list_cache').val().length == 0 )
+        {
+            $('#list_cache').val( list );
+
+            nest_list.append(list);
+
+            //配置阶层只能为3
+            nest_list.nestable({ maxDepth : 3 });
+        }
+        else
+        {
+            nest_list.empty();
+
+            nest_list.append(list);
+        }
+
+        $('.dd-handle a').on('mousedown', function(e){
+            e.stopPropagation();
+        });
+
+
+        var id_grp = [];
+        $( '.dd-list' ).find( '.items' ).each( function()
+        {
+            var _that = $( this );
+            var _id = _that.attr( 'data-id' );
+
+            id_grp.push( _id );
+        } );
+
+
+
+        $('[data-rel="tooltip"]').tooltip();
+        nest_list.nestable().on('change', function(){
+            var r = $('.dd').nestable('serialize');
+            //var t = eval('[' + "r" + ']');
+            console.log(JSON.stringify(r));    //改变排序之后的数据
+            console.log(JSON.stringify(id_grp));
+            $.ajax({
+                cache : false,
+                async : true,
+                type : "post",
+                url : "/resource/treeSerialize",
+                contentType : "application/x-www-form-urlencoded; charset=utf-8",
+                data : {
+                    'id'   : JSON.stringify(id_grp),
+                    'data' : JSON.stringify(r),
+                },
+                traditional: true,
+                success: function (result) {
+                    console.log('发送成功');
+                }
+            });
+        });
+    });
+</script>

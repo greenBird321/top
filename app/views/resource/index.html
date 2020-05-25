@@ -1,0 +1,27 @@
+<div class="app-content-body ">
+
+
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3">Resources Manage</h1>
+    </div>
+    <div class="wrapper-md">
+        <div class="row">
+            <div class="col-sm-12 row-sm text-center">
+
+                {%if app_list is defined%}
+                {%for item in app_list%}
+                <div class="col-xs-4">
+                    <a  data-pjax href="/resource/index?id={{item['app_id']}}" class="block panel padder-v bg-dark item">
+                        <span class="text-white font-thin h1 block">{{item['app_id']}}</span>
+                        <span class="text-muted text-xs">{{item['name']}}</span>
+                    </a>
+                </div>
+                {%endfor%}
+                {%endif%}
+
+            </div>
+        </div>
+    </div>
+
+
+</div>

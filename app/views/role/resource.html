@@ -1,0 +1,94 @@
+<div class="app-content-body ">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3">{{role}} {{id}} Resource</h1>
+    </div>
+
+    <div class="wrapper-md">
+        <div class="row">
+            <div class="col-lg-12">
+                <form data-pjax method="post" class="bs-example form-horizontal" action="/role/resource">
+                    <input type="hidden" value="{{roleId}}" name='role_id'>
+                    <input type="hidden" value="{{id}}" name="app">
+                    <div ui-jq="nestable" id="nest_list" class="dd" style="max-width: 100%">
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in col-lg-8"></div>
+                    <div class="form-group row">
+                        <div class="col-sm-12 col-sm-offset-5">
+                            <button type="submit" class="btn btn-info">确认修改</button>
+                            <a class="btn btn-default" onclick="javascript:history.back(-1)">取消修改</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<textarea id="list_cache" style="display:none;"></textarea>
+<script>
+    jQuery(function ($) {
+
+        function initNestable(data, status) {
+            var l = $("<ol>").addClass("dd-list");
+            $.each(data, function (i, v) {
+                var c = $("<li>").addClass("dd-item items").attr({"data-id": v["id"]});
+                var ct = '<div class="dd3-content" style="text-align: center">' +
+                        '<i class="' + v["icon"] + '"></i>' +
+                        '<span>&nbsp;&nbsp;&nbsp;</span>' +
+                        '<span>' + v["name"] + '</span>' +
+                        '<span class="pull-right">' +
+                        '<label class="checkbox-inline i-checks">' +
+                        '<input type="checkbox" value= ' + v["id"] + ' name="resource[]" {ifChecked} ><i></i></label>' +
+                        '</span>' +
+                        '</div>';
+
+                // 判断是否为选中状态
+                for (var iCount in status) {
+
+                    if (iCount == v["id"]) {
+                        ct = ct.replace('{ifChecked}', "checked");
+                    }
+                }
+                c = c.append(ct);
+                l.append(c);
+                if (!!v["children"])
+                    c.append(initNestable(v["children"], status));
+            });
+            return l;
+        }
+
+        var data = JSON.parse('{{data}}');
+        var data_status = JSON.parse('{{role_resource}}');
+        var list = initNestable(data, data_status);
+        var nest_list = $('#nest_list');
+
+        if ($('#list_cache').val().length == 0) {
+            $('#list_cache').val(list);
+
+            nest_list.append(list);
+
+            //配置阶层只能为3
+            nest_list.nestable({maxDepth: 3});
+        }
+        else {
+            nest_list.empty();
+
+            nest_list.append(list);
+        }
+
+        $('.dd-handle a').on('mousedown', function (e) {
+            e.stopPropagation();
+        });
+
+
+        var id_grp = [];
+        $('.dd-list').find('.items').each(function () {
+            var _that = $(this);
+            var _id = _that.attr('data-id');
+
+            id_grp.push(_id);
+        });
+
+
+        $('[data-rel="tooltip"]').tooltip();
+    });
+</script>

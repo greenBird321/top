@@ -1,0 +1,122 @@
+<div class="app-content-body ">
+
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3">Logs</h1>
+    </div>
+
+    <div class="wrapper-md">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <ul class="nav nav-pills pull-right col-md-4 col-sm-6">
+                    <div class="form-group">
+                        <div class="input-daterange input-group" id="date">
+                            <input ui-jq="datepicker" type="text" class="input-sm form-control" id="start_time" value=""/>
+                            <span class="input-group-addon">到</span>
+                            <input ui-jq="datepicker" type="text" class="input-sm form-control" id="end_time" value=""/>
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-primary btn-sm" onclick="getList()" id="confirm">确定</button>
+                            </div>
+                        </div>
+                    </div>
+                </ul>
+                <i class="fa fa-cube"></i> 操作日志
+            </div>
+            <div class="">
+                <table id="tab" ui-jq="dataTable" class="table table-striped b-t b-b">
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>用户名称</th>
+                        <th>节点名称</th>
+                        <th>目标id</th>
+                        <th>ip地址</th>
+                        <th>创建时间</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="/assets/libs/jquery/plugins/integration/bootstrap/3/dataTables.bootstrap.css" type="text/css"/>
+<script>
+    var filterManage = {
+        getQueryCondition: function (data) {
+            var param = {};
+            param.start_time = $("#start_time").val();
+            param.end_time = $("#end_time").val();
+            //组装分页参数
+            param.startIndex = data.start;
+            param.pageSize = data.length;
+            param.draw = data.draw;
+            return param;
+        }
+    };
+
+    //点击菜单触发pjax
+    $(document).on('pjax:success', function () {
+        getList();
+    });
+
+    //刷新整体页面，不触发pjax
+    $(function () {
+        getList();
+    });
+
+    function getList() {
+
+        $('#tab').DataTable({
+            "ordering": false,
+            "searching": false,
+            "destroy": true,
+            "serverSide": true,
+            "aLengthMenu": [15, 25, 50, 100],
+            "ajax": function (data, callback) {
+                //封装请求参数
+                var param = filterManage.getQueryCondition(data);
+                $.ajax({
+                    type: "POST",
+                    url: "/system/logs",
+                    cache: false,  //禁用缓存
+                    data: param,    //传入已封装的参数
+                    dataType: "json",
+                    success: function (result) {
+                        //异常判断与处理
+                        if (result.errorCode) {
+                            alert("查询失败");
+                            return;
+                        }
+                        //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                        //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+                        callback(result);
+                    },
+                    error: function () {
+                        alert("查询失败");
+                    }
+                });
+            },
+            "columns": [
+                {"data": 'id'},
+                {"data": 'user'},
+                {"data": 'resource'},
+                {"data": 'data_id'},
+                {"data": 'ip'},
+                {"data": 'create_time'}
+            ]
+        });
+
+    }
+
+    $(function () {
+        $('#date').datepicker({
+            format: 'yyyy-mm-dd',
+            language: 'zh-CN',
+            autoclose: true,
+            clearBtn: true,
+            todayBtn: true
+        });
+    });
+
+</script>
