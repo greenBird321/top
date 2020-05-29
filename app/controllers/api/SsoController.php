@@ -85,6 +85,8 @@ class SsoController extends ControllerBase
                 Utils::tips('warning', 'The User Is Limited');
             }
 
+            // 查询role_id并合并
+            $role_id = $this->authModel->getRoleID($userData['id']);
 
             // 设置SESSION
             $this->session->set('user_id', $userData['id']);
@@ -252,6 +254,8 @@ class SsoController extends ControllerBase
         }
         $ticket = $argv['0'];
         $user = $this->authModel->getUserByTicket($ticket);
+        $role_id = $this->authModel->getRoleID($user['id']);
+
         if (!$user) {
             $this->response->setJsonContent([
                 'code' => 1,
@@ -275,7 +279,8 @@ class SsoController extends ControllerBase
                     'user_id'  => $user['id'],
                     'username' => $user['username'],
                     'name'     => $user['name'],
-                    'avatar'   => $user['avatar']
+                    'avatar'   => $user['avatar'],
+                    'role_id'  => $role_id
                 ]
             ))->send();
         exit();
